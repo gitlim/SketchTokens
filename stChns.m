@@ -24,7 +24,6 @@ function chns = stChns( I, opts )
     if isfield(opts, 'inputColorChannel') && strcmp(opts.inputColorChannel, 'luv')    
         I = rgbConvert(I,'orig');
     else
-        keyboard;
         I = rgbConvert(I,'luv');
     end
     chns=cell(1,1000);

@@ -32,7 +32,8 @@ function S = stDetect( I, model, stride, rescale_back )
     % compute features
     sizeOrig=size(I);
     opts=model.opts;
-    opts.inputColorChannel = 'luv';
+    %opts.inputColorChannel = 'luv';
+    opts.inputColorChannel = 'rgb';
     I = imPad(I,opts.radius,'symmetric');
     chns = stChns( I, opts );
     [cids1,cids2] = computeCids(size(chns),opts);
