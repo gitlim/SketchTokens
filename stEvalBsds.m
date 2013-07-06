@@ -88,14 +88,8 @@ function [ODS,OIS,AP] = stEvalBsds( model, varargin )
         
         I = imread([imgDir id '.jpg']);
         st = max(min(1,stDetect(I,model)),0);
-        E = stToEdges(st,1); S=5;
+        E = stToEdges(st,1); 
         
-        for s=1:S,
-            E([s end-s+1],:,:)=E([s end-s+1],:,:)*(s-1)/S;
-        end
-        for s=1:S,
-            E(:,[s end-s+1],:)=E(:,[s end-s+1],:)*(s-1)/S;
-        end
         imwrite(uint8(E*255),[resDir id '.png']);
     end
 

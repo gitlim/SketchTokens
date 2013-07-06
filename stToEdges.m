@@ -1,12 +1,14 @@
-function E = stToEdges( S, nms )
+function E = stToEdges( S, nms, suppress )
 % Convert sketch tokens to edges.
 %
 % USAGE
-%  E = stToEdges( S, [nms] )
+%  E = stToEdges( S, [nms], [suppress] )
 %
 % INPUTS
 %  S          - [h x w x (nTokens+1)] sketch token probability maps
 %  nms        - [1] if true apply non-maximum suppression to edges
+%  suppress   - [1] if true suppress boundary confidence in order to
+%                   compensate padding effect
 %
 % OUTPUTS
 %  E          - [h x w] edge probability map
@@ -24,6 +26,9 @@ function E = stToEdges( S, nms )
     if(nargin<2 || isempty(nms)),
         nms=1;
     end
+    if(nargin<3 || isempty(suppress)),
+        suppress=1;
+    end
 
     % extract edge probabilities
     E = 1-S(:,:,end);
@@ -32,6 +37,17 @@ function E = stToEdges( S, nms )
     if nms
         O=edgeOrient(E,4);
         E=edgeNms(E,O,1); 
+    end
+    
+    % apply boundary suppression
+    if suppress
+        S=5;        
+        for s=1:S,
+            E([s end-s+1],:,:)=E([s end-s+1],:,:)*(s-1)/S;
+        end
+        for s=1:S,
+            E(:,[s end-s+1],:)=E(:,[s end-s+1],:)*(s-1)/S;
+        end
     end
 
 end
