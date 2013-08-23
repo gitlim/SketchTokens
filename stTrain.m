@@ -90,7 +90,7 @@ function model = stTrain( varargin )
     opts.cellRad = round(patchSiz/nCells/2);
     tmp=opts.cellRad*2+1;
     opts.cellStep = tmp-ceil((nCells*tmp-patchSiz)/(nCells-1)); disp(opts);
-    assert( mod(nCells,2)==1 && (nCells-1)*opts.cellStep+tmp <= patchSiz );
+    assert( (nCells == 0) || (mod(nCells,2)==1 && (nCells-1)*opts.cellStep+tmp <= patchSiz ));
 
     % generate stream for reproducibility of model
     stream=RandStream('mrg32k3a','Seed',opts.seed);

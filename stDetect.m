@@ -37,7 +37,11 @@ function S = stDetect( I, model, stride, rescale_back )
     I = imPad(I,opts.radius,'symmetric');
     chns = stChns( I, opts );
     [cids1,cids2] = computeCids(size(chns),opts);
-    chnsSs = convBox(chns,opts.cellRad);
+    if opts.nCells
+        chnsSs = convBox(chns,opts.cellRad);
+    else
+        chnsSs = [];
+    end
 
     % run forest on image
     S = stDetectMex( chns, chnsSs, model.thrs, model.fids, model.child, ...
@@ -80,12 +84,14 @@ function [cids1,cids2] = computeCids( siz, opts )
     m=opts.cellStep;
     nCellTotal=(n*n)*(n*n-1)/2;
     
-    assert(mod(n,2)==1); n1=(n-1)/2;
+    assert((n==0) || (mod(n,2)==1)); 
+    n1=(n-1)/2;
     nSimFtrs=nCellTotal*nChns;
     fids=uint32(0:nSimFtrs-1);
     ind=mod(fids,nCellTotal);
     ch=(fids-ind)/nCellTotal;
     
+    ind1 = []; ind2 = [];
     k=0;
     for i=1:n*n-1,
         k1=n*n-i;
